@@ -5,4 +5,11 @@ package FTPServer;
  */
 public class FTPRequest extends Thread {
 
+	/**
+	 * Method to run a FTP request
+	 */
+	public void run() {
+		
+	}
+	
 }
