@@ -2,6 +2,7 @@ package FTPServer.Server;
 
 import java.io.IOException;
 import java.net.Socket;
+import FTPServer.Server.ErrorMessage;
 
 /**
  * Class which permits to allow to implement a FTP request
