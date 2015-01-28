@@ -25,7 +25,33 @@ public class FTPRequest extends Thread {
 	 * Method to run a FTP request
 	 */
 	public void run() {
+	    
+	    try {
+            InputStream is = socket_communication.getInputStream();
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            
+            while(!finish){
+                
+                String[] request = br.readLine().split(" ");
+                processRequest(request[0], request[1]);                
+                
+                
+                
+            }
+            
+            
+	    
+	    
+	    
+	    } catch (IOException e) {
+            System.err.println("Problem encounter during the connection with the user");
+            e.printStackTrace();
+            return;
+        }
+	    
+	    
 
+	
 	}
 
 	/**
