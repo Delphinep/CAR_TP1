@@ -1,4 +1,4 @@
-package FTPServer;
+package FTPServer.Server;
 
 /**
  * Class which allows to implement a multi-thread FTP server

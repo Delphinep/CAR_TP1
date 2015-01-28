@@ -1,4 +1,4 @@
-package FTPServer;
+package FTPServer.Server;
 
 /**
  * Class which permits to allow to implement a FTP request
