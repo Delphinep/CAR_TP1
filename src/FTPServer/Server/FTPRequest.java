@@ -23,15 +23,13 @@ public class FTPRequest extends Thread {
 	/**
 	 * Method which allows to make general treatments for the input request
 	 */
-	public void processRequest(String request) {
-		String[] request_tab = request.split(request);
-		String cmd = request_tab[0];
-		switch(cmd) {
+	public void processRequest(String request_head, String request_msg) {
+		switch(request_head) {
 		case "USER":
-			processUser(request_tab[1]);
+			this.processUser(request_msg);
 			break;
 		case "PASS":
-			processPass(request_tab[1]);
+			this.processPass(request_msg);
 			break;
 		}
 	}
