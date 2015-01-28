@@ -40,8 +40,9 @@ public class FTPRequest extends Thread {
 
 	}
 
-	public void processPass() {
-
+	public void processPass(String request) {
+		this.user.setPasswd(request);
+		this.user.checkIdentity();
 	}
 
 	public void processRetr() {
