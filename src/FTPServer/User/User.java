@@ -23,6 +23,11 @@ public class User {
 		this.passwd = passwd;
 	}
 
+	public boolean checkIdentity(){
+	    //TODO : in a file, assert the user exist
+	    return true;
+	}
+	
 	/**
 	 * @return the username
 	 */
