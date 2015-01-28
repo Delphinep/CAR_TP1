@@ -13,16 +13,18 @@ import FTPServer.User.User;
 public class FTPServer {
 	
 	public static ArrayList<FTPRequest> ftp_requests;
+	
 
 	public static void main(String[] args) {
 		
+	    String path = "./";
 		try {
 			ServerSocket socket = new ServerSocket(4000);
 			
 			while(true) {
 				
 				Socket socket_communication = socket.accept();
-				FTPRequest request = new FTPRequest(socket_communication);
+				FTPRequest request = new FTPRequest(socket_communication, path);
 				addFtpRequest(request);
 				request.run();
 				
