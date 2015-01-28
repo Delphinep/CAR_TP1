@@ -5,6 +5,11 @@ package FTPServer.Server;
  */
 public class FTPRequest extends Thread {
 
+	Socket socket_communication;
+	
+	public FTPRequest(Socket socket_communication) {
+		
+	}
 	/**
 	 * Method to run a FTP request
 	 */
@@ -39,8 +44,8 @@ public class FTPRequest extends Thread {
 
 	}
 	
-	public void processQuit() {
-
+	public void processQuit() throws IOException {
+		this.socket_communication.close();
 	}
 
 }
