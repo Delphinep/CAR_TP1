@@ -17,8 +17,9 @@ public class FTPRequest extends Thread {
 	User user;
 	boolean finish;
 	
-	public FTPRequest(Socket socket_communication) {
-		
+	public FTPRequest(Socket socket_communication, String path) {
+		this.user = new User();
+		finish = false;
 	}
 	/**
 	 * Method to run a FTP request
