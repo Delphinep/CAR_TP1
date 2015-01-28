@@ -14,6 +14,8 @@ import FTPServer.User.User;
 public class FTPRequest extends Thread {
 
 	Socket socket_communication;
+	User user;
+	boolean finish;
 	
 	public FTPRequest(Socket socket_communication) {
 		
