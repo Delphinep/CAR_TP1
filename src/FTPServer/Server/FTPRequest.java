@@ -1,5 +1,8 @@
 package FTPServer.Server;
 
+import java.io.IOException;
+import java.net.Socket;
+
 /**
  * Class which permits to allow to implement a FTP request
  */
