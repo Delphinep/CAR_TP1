@@ -24,10 +24,11 @@ public class User {
 		this.username = username;
 		this.passwd = passwd;
 	}
-
-	public boolean checkIdentity(){
-	    //TODO : in a file, assert the user exist
-	    return true;
+	
+	/**
+	 * Second constructor of the User object - without parameters
+	 */
+	public User() {
 	}
 	
 	/**
