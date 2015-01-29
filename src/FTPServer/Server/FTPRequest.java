@@ -111,7 +111,11 @@ public class FTPRequest extends Thread {
 			System.out.println("Bad identity HACKER!");
 	}
 
-	public void processRetr() {
+	/**
+	 * Method which allows to process the RETR command
+	 * @param request
+	 */
+	public void processRetr(String request) {
 
 	}
 	
