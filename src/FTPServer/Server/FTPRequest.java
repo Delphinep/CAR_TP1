@@ -36,37 +36,39 @@ public class FTPRequest extends Thread {
 		this.user = new User();
 		this.finish = false;
 	}
+	
 	/**
 	 * Method to run a FTP request
 	 */
 	public void run() {
 	    
 	    try {
-            InputStream is = socket_communication.getInputStream();
+	    	/*
+	    	 * Input Stream
+	    	 */
+            InputStream is = this.socket_communication.getInputStream();
+            /*
+             * BufferedReader
+             */
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             
-            while(!finish){
+            while(!this.finish){
                 
                 String[] request = br.readLine().split(" ");
+                /*
+                 * request[0] -> COMMAND NAME
+                 * request[1] -> MSG
+                 */
                 processRequest(request[0], request[1]);                
-                
-                
                 
             }
             
-            
-	    
-	    
-	    
 	    } catch (IOException e) {
             System.err.println("Problem encounter during the connection with the user");
             e.printStackTrace();
             return;
         }
-	    
-	    
-
-	
+	   
 	}
 
 	/**
