@@ -17,6 +17,8 @@ public class User {
 	
 	/**
 	 * Constructor of the User object
+	 * @param username The username of the user
+	 * @param passwd The password of the user
 	 */
 	public User() {
 		this.username = username;
