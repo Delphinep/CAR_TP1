@@ -61,12 +61,12 @@ public class FTPRequest extends Thread {
 
 	}
 
-	public void processUser() {
-
+	public void processUser(String message) {
+	    user.setUsername(message);
 	}
 
 	public void processPass() {
-
+	    
 	}
 
 	public void processRetr() {
