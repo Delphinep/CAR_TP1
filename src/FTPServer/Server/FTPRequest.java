@@ -98,11 +98,17 @@ public class FTPRequest extends Thread {
 	    user.setUsername(message);
 	}
 
-	
-	public void processPass(String request) {
-		this.user.setPasswd(request);
-		this.user.checkIdentity();
-
+	/**
+	 * Method which allows to process the PASS command
+	 * @param request
+	 * @throws Exception 
+	 */
+	public void processPass(String passwd) throws Exception {
+		this.user.setPasswd(passwd);
+		if (this.checkIdentity())
+			System.out.println("Identity Verified");
+		else
+			System.out.println("Bad identity HACKER!");
 	}
 
 	public void processRetr() {
