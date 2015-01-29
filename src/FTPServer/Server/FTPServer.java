@@ -5,8 +5,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import FTPServer.User.User;
-
 /**
  * Class which allows to implement a multi-thread FTP server
  */
@@ -47,8 +45,8 @@ public class FTPServer {
 	/**
 	 * @param ftp_requests the ftp_requests to set
 	 */
-	public static void setFtpRequests(ArrayList<FTPRequest> ftp_requests) {
-		ftp_requests = ftp_requests;
+	public static void setFtpRequests(ArrayList<FTPRequest> new_ftp_requests) {
+		ftp_requests = new_ftp_requests;
 	}
 	
 	/**

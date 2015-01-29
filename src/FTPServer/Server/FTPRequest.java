@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import FTPServer.Server.ErrorMessage;
 
 import FTPServer.User.User;
 
@@ -57,16 +58,26 @@ public class FTPRequest extends Thread {
 	/**
 	 * Method which allows to make general treatments for the input request
 	 */
-	public void processRequest() {
-
+	public void processRequest(String request_head, String request_msg) {
+		switch(request_head) {
+		case "USER":
+			this.processUser(request_msg);
+			break;
+		case "PASS":
+			this.processPass(request_msg);
+			break;
+		}
 	}
 
 	public void processUser(String message) {
 	    user.setUsername(message);
 	}
 
-	public void processPass() {
-	    
+	
+	public void processPass(String request) {
+		this.user.setPasswd(request);
+		this.user.checkIdentity();
+
 	}
 
 	public void processRetr() {
