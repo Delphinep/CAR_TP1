@@ -119,7 +119,11 @@ public class FTPRequest extends Thread {
 
 	}
 	
-	public void processStor() {
+	/**
+	 * Method which allows to process the STOR command
+	 * @param request
+	 */
+	public void processStor(String request) {
 
 	}
 	
