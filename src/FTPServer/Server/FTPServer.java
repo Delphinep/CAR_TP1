@@ -64,7 +64,7 @@ public class FTPServer {
 	 * @param ftp_request
 	 */
 	public static void addFtpRequest(FTPRequest ftp_request) {
-		ftp_requests.add(ftp_request);
+		FTPServer.ftp_requests.add(ftp_request);
 	}
 
 }
