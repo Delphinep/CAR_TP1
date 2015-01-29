@@ -25,9 +25,16 @@ public class FTPRequest extends Thread {
 	User user;
 	boolean finish;
 	
-	public FTPRequest(Socket socket_communication, String path) {
+	/**
+	 * Constructor of the FTPRequest object
+	 * @param socket_communication
+	 * @param path
+	 */
+	public FTPRequest(Socket socket_communication, File file) {
+		this.socket_communication = socket_communication;
+		this.csv_database = file;
 		this.user = new User();
-		finish = false;
+		this.finish = false;
 	}
 	/**
 	 * Method to run a FTP request
