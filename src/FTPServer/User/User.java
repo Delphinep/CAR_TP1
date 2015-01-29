@@ -20,7 +20,7 @@ public class User {
 	 * @param username The username of the user
 	 * @param passwd The password of the user
 	 */
-	public User() {
+	public User(String username, String passwd) {
 		this.username = username;
 		this.passwd = passwd;
 	}
