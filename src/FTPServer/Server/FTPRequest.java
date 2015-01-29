@@ -90,6 +90,10 @@ public class FTPRequest extends Thread {
 		}
 	}
 
+	/**
+	 * Method which allows to process the USER command
+	 * @param message
+	 */
 	public void processUser(String message) {
 	    user.setUsername(message);
 	}
@@ -113,6 +117,10 @@ public class FTPRequest extends Thread {
 
 	}
 	
+	/**
+	 * Method which allows to quit the session
+	 * @throws IOException
+	 */
 	public void processQuit() throws IOException {
 		this.socket_communication.close();
 		finish = false;
