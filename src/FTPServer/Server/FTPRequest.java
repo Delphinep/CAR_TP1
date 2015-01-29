@@ -80,7 +80,12 @@ public class FTPRequest extends Thread {
 			this.processUser(request_msg);
 			break;
 		case "PASS":
-			this.processPass(request_msg);
+			try {
+				this.processPass(request_msg);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return;
+			}
 			break;
 		}
 	}
