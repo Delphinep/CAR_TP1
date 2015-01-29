@@ -56,7 +56,7 @@ public class FTPServer {
 	 * @param ftp_requests the ftp_requests to set
 	 */
 	public static void setFtpRequests(ArrayList<FTPRequest> new_ftp_requests) {
-		ftp_requests = new_ftp_requests;
+		FTPServer.ftp_requests = new_ftp_requests;
 	}
 	
 	/**
