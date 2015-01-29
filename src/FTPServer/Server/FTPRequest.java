@@ -127,7 +127,11 @@ public class FTPRequest extends Thread {
 
 	}
 	
-	public void processList() {
+	/**
+	 * Method which allows to process the LIST command
+	 * @param request
+	 */
+	public void processList(String request) {
 
 	}
 	
