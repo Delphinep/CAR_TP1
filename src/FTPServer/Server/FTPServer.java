@@ -49,7 +49,7 @@ public class FTPServer {
 	 * @return the ftp_requests
 	 */
 	public static ArrayList<FTPRequest> getFtpRequests() {
-		return ftp_requests;
+		return FTPServer.ftp_requests;
 	}
 
 	/**
