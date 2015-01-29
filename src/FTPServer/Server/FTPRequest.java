@@ -21,6 +21,7 @@ import FTPServer.User.User;
 public class FTPRequest extends Thread {
 
 	Socket socket_communication;
+	File csv_database;
 	User user;
 	boolean finish;
 	
