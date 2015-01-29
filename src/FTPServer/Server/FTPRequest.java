@@ -144,4 +144,17 @@ public class FTPRequest extends Thread {
 		finish = false;
 	}
 
+	/**
+	 * Method which allows to check the identity of the user
+	 * @return
+	 * @throws Exception 
+	 */
+	public boolean checkIdentity() throws Exception{
+		String username = this.user.getUsername();
+		if (this.csv_database.checkUser(username)) {
+			if (this.csv_database.getPasswd(username) == this.csv_database.getUsersList().get(username))
+				return true;
+		}
+		return false;
+	}
 }
