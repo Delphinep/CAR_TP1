@@ -157,4 +157,12 @@ public class FTPRequest extends Thread {
 		}
 		return false;
 	}
+	
+	/**
+	 * Method to return a string which is the representation of the session
+	 */
+	public String toString() {
+		return "Session initialized by "+this.user.getUsername();
+	}
+
 }
