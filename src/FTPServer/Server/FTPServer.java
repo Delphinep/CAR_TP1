@@ -18,8 +18,8 @@ import util.File;
  */
 public class FTPServer {
 	
-	public static ArrayList<FTPRequest> ftp_requests;
-	
+	public static ArrayList<FTPRequest> ftp_requests = new ArrayList<FTPRequest>();
+	private static ServerSocket socket;
 
 	public static void main(String[] args) {
 		
