@@ -1,9 +1,17 @@
 package FTPServer.Server;
 
+/*
+ * JAVA import
+ */
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+
+/*
+ * Class import
+ */
+import util.File;
 
 /**
  * Class which allows to implement a multi-thread FTP server
