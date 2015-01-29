@@ -23,15 +23,17 @@ public class FTPServer {
 
 	public static void main(String[] args) {
 		
-	    String path = "./";
+	    File csv_database = new File();
+	    
 		try {
-			ServerSocket socket = new ServerSocket(4000);
+			
+			FTPServer.socket = new ServerSocket(4000);
 			
 			while(true) {
 				
 				Socket socket_communication = socket.accept();
-				FTPRequest request = new FTPRequest(socket_communication, path);
-				addFtpRequest(request);
+				FTPRequest request = new FTPRequest(socket_communication, csv_database);
+				FTPServer.addFtpRequest(request);
 				request.run();
 				
 			}
