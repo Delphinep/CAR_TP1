@@ -4,9 +4,11 @@ package FTPServer.Server;
  * JAVA import
  */
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.Socket;
 
 import util.File;
@@ -43,15 +45,35 @@ public class FTPRequest extends Thread {
 	public void run() {
 	    
 	    try {
+	    	
 	    	/*
 	    	 * Input Stream
 	    	 */
             InputStream is = this.socket_communication.getInputStream();
+            
+            /*
+             * Output Stream
+             */
+            OutputStream os = this.socket_communication.getOutputStream();
+            
             /*
              * BufferedReader
              */
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             
+            /*
+             * DataOutputStream
+             */
+            DataOutputStream dos = new DataOutputStream(os);
+            
+            /*
+             * Message : OK!
+             */
+            dos.writeBytes(new FTPMessage(220, "Service ready.\n").toString());
+            
+            /*
+             * Process requests
+             */
             while(!this.finish){
                 
                 String[] request = br.readLine().split(" ");
@@ -59,9 +81,17 @@ public class FTPRequest extends Thread {
                  * request[0] -> COMMAND NAME
                  * request[1] -> MSG
                  */
-                processRequest(request[0], request[1]);                
+                
+                /*
+                 * Send the result of the command
+                 */
+                dos.writeBytes(processRequest(request[0], request[1]));                
                 
             }
+            
+            is.close();
+            
+            os.close();
             
 	    } catch (IOException e) {
             System.err.println("Problem encounter during the connection with the user");
@@ -74,28 +104,29 @@ public class FTPRequest extends Thread {
 	/**
 	 * Method which allows to make general treatments for the input request
 	 */
-	public void processRequest(String request_head, String request_msg) {
+	public String processRequest(String request_head, String request_msg) {
 		switch(request_head) {
 		case "USER":
-			this.processUser(request_msg);
-			break;
+			return this.processUser(request_msg);
 		case "PASS":
 			try {
-				this.processPass(request_msg);
-			} catch (Exception e) {
+				return this.processPass(request_msg);
+			} 
+			catch (Exception e) {
 				e.printStackTrace();
-				return;
+				return new FTPMessage(503, "Bad sequence of commands.\n").toString();
 			}
-			break;
 		}
+		return new FTPMessage(500, "Syntax error, command unrecognized.\n").toString();
 	}
 
 	/**
 	 * Method which allows to process the USER command
 	 * @param message
 	 */
-	public void processUser(String message) {
+	public String processUser(String message) {
 	    user.setUsername(message);
+	    return new FTPMessage(331, "User name okay, need password.\n").toString();
 	}
 
 	/**
@@ -103,12 +134,12 @@ public class FTPRequest extends Thread {
 	 * @param request
 	 * @throws Exception 
 	 */
-	public void processPass(String passwd) throws Exception {
+	public String processPass(String passwd) throws Exception {
 		this.user.setPasswd(passwd);
 		if (this.checkIdentity())
-			System.out.println("Identity Verified");
+			return new FTPMessage(200, "Command okay.\n").toString();
 		else
-			System.out.println("Bad identity HACKER!");
+			return new FTPMessage(530, "Not logged in.\n").toString();
 	}
 
 	/**
