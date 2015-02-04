@@ -3,15 +3,14 @@ package FTPServer.Server;
 /*
  * JAVA import
  */
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-
 /*
  * Class import
  */
-import util.File;
 
 /**
  * Class which allows to implement a multi-thread FTP server
@@ -20,10 +19,12 @@ public class FTPServer {
 	
 	public static ArrayList<FTPRequest> ftp_requests = new ArrayList<FTPRequest>();
 	private static ServerSocket socket;
-
+	private final static String repository_PATH = "./root_file_repository";
+	
 	public static void main(String[] args) {
 		
-	    File csv_database = new File();
+	    util.File csv_database = new util.File();
+	    File repository = new File(repository_PATH);
 	    
 		try {
 			
