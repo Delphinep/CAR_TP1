@@ -183,7 +183,7 @@ public class FTPRequest extends Thread {
 	public boolean checkIdentity() throws Exception{
 		String username = this.user.getUsername();
 		if (this.csv_database.checkUser(username)) {
-			if (this.csv_database.getPasswd(username) == this.csv_database.getUsersList().get(username))
+			if (this.user.getPasswd().equals(this.csv_database.getUsersList().get(username)))
 				return true;
 		}
 		return false;
