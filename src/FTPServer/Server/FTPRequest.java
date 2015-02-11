@@ -84,6 +84,9 @@ public class FTPRequest extends Thread {
                 
                 /*
                  * Send the result of the command
+                 * Two methods:
+                 * 		-requests have length > 1 -> send the cmd name and the message
+                 * 		-requests have length = 1 -> send only the cmd (SYST for example)
                  */
                 if (request.length > 1)
                 	dos.writeBytes(processRequest(request[0], request[1]));                
