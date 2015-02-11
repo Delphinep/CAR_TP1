@@ -84,9 +84,14 @@ public class FTPRequest extends Thread {
                 
                 /*
                  * Send the result of the command
+                 * Two methods:
+                 * 		-requests have length > 1 -> send the cmd name and the message
+                 * 		-requests have length = 1 -> send only the cmd (SYST for example)
                  */
-                dos.writeBytes(processRequest(request[0], request[1]));                
-                
+                if (request.length > 1)
+                	dos.writeBytes(processRequest(request[0], request[1]));                
+                else
+                	dos.writeBytes(processRequest(request[0], ""));
             }
             
             is.close();
@@ -116,6 +121,8 @@ public class FTPRequest extends Thread {
 				e.printStackTrace();
 				return new FTPMessage(503, "Bad sequence of commands.\n").toString();
 			}
+		case "SYST":
+			return this.processSyst();
 		}
 		return new FTPMessage(500, "Syntax error, command unrecognized.\n").toString();
 	}
@@ -140,6 +147,14 @@ public class FTPRequest extends Thread {
 			return new FTPMessage(200, "Command okay.\n").toString();
 		else
 			return new FTPMessage(530, "Not logged in.\n").toString();
+	}
+	
+	/**
+	 * Method which allows to process the SYST command
+	 * @return A string with a small description of the Unix system
+	 */
+	public String processSyst() {
+		return new FTPMessage(215, "Unix system.\n").toString();
 	}
 
 	/**

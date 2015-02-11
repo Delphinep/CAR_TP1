@@ -12,7 +12,7 @@ import java.util.HashMap;
 /**
  * Class for the CSV file
  */
-public class File {
+public class RootFileCSV {
 
 	/**
 	 * List of users - each contains the username and the password
@@ -27,7 +27,7 @@ public class File {
 	/**
 	 * Constructor of the object
 	 */
-	public File() {
+	public RootFileCSV() {
 		this.users_list = new HashMap<String, String>();
 		this.readFile();
 	}
@@ -40,17 +40,17 @@ public class File {
 		String line;
 		
 		try {
-			BufferedReader file = new BufferedReader(new FileReader(File.getPathfile()));
+			BufferedReader file = new BufferedReader(new FileReader(RootFileCSV.getPathfile()));
 			while ((line = file.readLine()) != null) {
 				String[] user = line.split(";");
 				this.users_list.put(user[0], user[1]);
 			}
 			file.close();
 		} catch (FileNotFoundException e) {
-			System.out.println("ERROR : File "+File.pathfile+" not found...");
+			System.out.println("ERROR : File "+RootFileCSV.pathfile+" not found...");
 			e.printStackTrace();
 		} catch (IOException e) {
-			System.out.println("ERROR : I/O Exception for "+File.pathfile);
+			System.out.println("ERROR : I/O Exception for "+RootFileCSV.pathfile);
 			e.printStackTrace();
 		}
 	}
