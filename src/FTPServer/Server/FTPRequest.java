@@ -5,13 +5,14 @@ package FTPServer.Server;
  */
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import util.File;
+import util.RootFileCSV;
 /*
  * Class import
  */
@@ -22,20 +23,23 @@ import FTPServer.User.User;
  */
 public class FTPRequest extends Thread {
 
-	Socket socket_communication;
-	File csv_database;
-	User user;
-	boolean finish;
+	private Socket socket_communication;
+	private RootFileCSV csv_database;
+	private User user;
+	private final static String repository_root_PATH = "./root_file_repository/";
+	private String current_path;
+	private boolean finish;
 	
 	/**
 	 * Constructor of the FTPRequest object
 	 * @param socket_communication
 	 * @param path
 	 */
-	public FTPRequest(Socket socket_communication, File file) {
+	public FTPRequest(Socket socket_communication, RootFileCSV file) {
 		this.socket_communication = socket_communication;
 		this.csv_database = file;
 		this.user = new User();
+		this.current_path = repository_root_PATH;
 		this.finish = false;
 	}
 	
@@ -123,6 +127,8 @@ public class FTPRequest extends Thread {
 			}
 		case "SYST":
 			return this.processSyst();
+		case "LIST":
+			return this.processList();
 		}
 		return new FTPMessage(500, "Syntax error, command unrecognized.\n").toString();
 	}
@@ -177,8 +183,16 @@ public class FTPRequest extends Thread {
 	 * Method which allows to process the LIST command
 	 * @param request
 	 */
-	public void processList(String request) {
-
+	public String processList() {
+		File actual_file = new File(this.current_path);
+		String message_to_return = "List of files into "+this.current_path+" :\n";
+		for (final File fileEntry: actual_file.listFiles()) {
+			if (fileEntry.isFile())
+				message_to_return += "f: "+fileEntry.getName()+"\n";
+			if (fileEntry.isDirectory())
+				message_to_return += "d: "+fileEntry.getName()+"\n";
+		}
+		return new FTPMessage(250, message_to_return).toString();
 	}
 	
 	/**
