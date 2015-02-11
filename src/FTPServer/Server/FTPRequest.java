@@ -141,6 +141,14 @@ public class FTPRequest extends Thread {
 		else
 			return new FTPMessage(530, "Not logged in.\n").toString();
 	}
+	
+	/**
+	 * Method which allows to process the SYST command
+	 * @return A string with a small description of the Unix system
+	 */
+	public String processSyst() {
+		return new FTPMessage(215, "Unix system.\n").toString();
+	}
 
 	/**
 	 * Method which allows to process the RETR command
