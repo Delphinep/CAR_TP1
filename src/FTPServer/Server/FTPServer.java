@@ -19,12 +19,10 @@ public class FTPServer {
 	
 	public static ArrayList<FTPRequest> ftp_requests = new ArrayList<FTPRequest>();
 	private static ServerSocket socket;
-	private final static String repository_PATH = "./root_file_repository";
 	
 	public static void main(String[] args) {
 		
-	    util.File csv_database = new util.File();
-	    File repository = new File(repository_PATH);
+	    util.RootFileCSV csv_database = new util.RootFileCSV();
 	    
 		try {
 			
