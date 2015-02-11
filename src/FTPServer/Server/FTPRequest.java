@@ -24,6 +24,7 @@ import FTPServer.User.User;
 public class FTPRequest extends Thread {
 
 	private Socket socket_communication;
+	private Socket socket_data;
 	private RootFileCSV csv_database;
 	private User user;
 	private final static String repository_root_PATH = "./root_file_repository/";
@@ -172,7 +173,18 @@ public class FTPRequest extends Thread {
 	public void processPort(String request) {
 		String[] split_request = request.split(",");
 		String ip = split_request[0]+split_request[1]+split_request[2]+split_request[3];
-		String port = Integer.toString(256 * Integer.parseInt(split_request[4]) + Integer.parseInt(split_request[5]));
+		int port = 256 * Integer.parseInt(split_request[4]) + Integer.parseInt(split_request[5]);
+		
+		/*
+		 * Data socket connection
+		 */
+		try {
+			this.socket_data = new Socket(ip, port);
+		} catch (IOException e) {
+			System.out.println("No connection for data...");
+			e.printStackTrace();
+		}
+		
 	}
 
 	/**
