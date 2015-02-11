@@ -116,6 +116,8 @@ public class FTPRequest extends Thread {
 				e.printStackTrace();
 				return new FTPMessage(503, "Bad sequence of commands.\n").toString();
 			}
+		case "SYST":
+			return this.processSyst();
 		}
 		return new FTPMessage(500, "Syntax error, command unrecognized.\n").toString();
 	}
