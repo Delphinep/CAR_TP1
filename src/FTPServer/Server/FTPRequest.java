@@ -193,11 +193,14 @@ public class FTPRequest extends Thread {
 	
 	/**
 	 * Method which allows to process the LIST command
-	 * @param request
+	 * @return The list of files and directories into the current path
 	 */
 	public String processList() {
 		File actual_file = new File(this.current_path);
 		String message_to_return = "List of files into "+this.current_path+" :\n";
+		/*
+		 * For all files, if the studied file is a file -> f + getName; else d + getName
+		 */
 		for (final File fileEntry: actual_file.listFiles()) {
 			if (fileEntry.isFile())
 				message_to_return += "f: "+fileEntry.getName()+"\n";
