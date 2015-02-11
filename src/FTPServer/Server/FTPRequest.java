@@ -24,6 +24,7 @@ import FTPServer.User.User;
 public class FTPRequest extends Thread {
 
 	private Socket socket_communication;
+	private Socket socket_data;
 	private RootFileCSV csv_database;
 	private User user;
 	private final static String repository_root_PATH = "./root_file_repository/";
@@ -129,6 +130,8 @@ public class FTPRequest extends Thread {
 			return this.processSyst();
 		case "LIST":
 			return this.processList();
+		case "PORT":
+			this.processPort(request_msg);
 		}
 		return new FTPMessage(500, "Syntax error, command unrecognized.\n").toString();
 	}
@@ -162,6 +165,27 @@ public class FTPRequest extends Thread {
 	public String processSyst() {
 		return new FTPMessage(215, "Unix system.\n").toString();
 	}
+	
+	/**
+	 * Method which allows to create a new stream for the data connection
+	 * @param request The IP and port of the data connection
+	 */
+	public void processPort(String request) {
+		String[] split_request = request.split(",");
+		String ip = split_request[0]+split_request[1]+split_request[2]+split_request[3];
+		int port = 256 * Integer.parseInt(split_request[4]) + Integer.parseInt(split_request[5]);
+		
+		/*
+		 * Data socket connection
+		 */
+		try {
+			this.socket_data = new Socket(ip, port);
+		} catch (IOException e) {
+			System.out.println("No connection for data...");
+			e.printStackTrace();
+		}
+		
+	}
 
 	/**
 	 * Method which allows to process the RETR command
@@ -181,11 +205,14 @@ public class FTPRequest extends Thread {
 	
 	/**
 	 * Method which allows to process the LIST command
-	 * @param request
+	 * @return The list of files and directories into the current path
 	 */
 	public String processList() {
 		File actual_file = new File(this.current_path);
 		String message_to_return = "List of files into "+this.current_path+" :\n";
+		/*
+		 * For all files, if the studied file is a file -> f + getName; else d + getName
+		 */
 		for (final File fileEntry: actual_file.listFiles()) {
 			if (fileEntry.isFile())
 				message_to_return += "f: "+fileEntry.getName()+"\n";
