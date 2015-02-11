@@ -85,8 +85,10 @@ public class FTPRequest extends Thread {
                 /*
                  * Send the result of the command
                  */
-                dos.writeBytes(processRequest(request[0], request[1]));                
-                
+                if (request.length > 1)
+                	dos.writeBytes(processRequest(request[0], request[1]));                
+                else
+                	dos.writeBytes(processRequest(request[0], ""));
             }
             
             is.close();
