@@ -129,6 +129,8 @@ public class FTPRequest extends Thread {
 			return this.processSyst();
 		case "LIST":
 			return this.processList();
+		case "PORT":
+			this.processPort(request_msg);
 		}
 		return new FTPMessage(500, "Syntax error, command unrecognized.\n").toString();
 	}
@@ -161,6 +163,16 @@ public class FTPRequest extends Thread {
 	 */
 	public String processSyst() {
 		return new FTPMessage(215, "Unix system.\n").toString();
+	}
+	
+	/**
+	 * Method which allows to create a new stream for the data connection
+	 * @param request The IP and port of the data connection
+	 */
+	public void processPort(String request) {
+		String[] split_request = request.split(",");
+		String ip = split_request[0]+split_request[1]+split_request[2]+split_request[3];
+		String port = Integer.toString(256 * Integer.parseInt(split_request[4]) + Integer.parseInt(split_request[5]));
 	}
 
 	/**
