@@ -15,8 +15,6 @@ public class FTPRequestTest {
     @Test
     public void testProcess() {
         FTPRequest req = new FTPRequest(null,new RootFileCSV());
-        Pattern p;
-        Matcher m;
         
         /**
          * Resquest USER / PASS
