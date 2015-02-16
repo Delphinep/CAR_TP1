@@ -229,7 +229,16 @@ public class FTPRequest extends Thread {
 			if (fileEntry.isDirectory())
 				message_to_return += "d: "+fileEntry.getName()+"\n";
 		}
-		return new FTPMessage(250, message_to_return).toString();
+		
+		/*
+         * Send the list via the socket_data
+         */
+		OutputStream os = this.socket_data.getOutputStream();
+		DataOutputStream dos = new DataOutputStream(os);
+		dos.writeBytes(message_to_return +"\n");
+		dos.flush();
+		socket_data.close();
+		return new FTPMessage(226,"List successfully send\n").toString();
 	}
 	
 	/**
