@@ -237,7 +237,7 @@ public class FTPRequest extends Thread {
 		/*
 		 * For all files, if the studied file is a file -> f + getName; else d + getName
 		 */
-		for (final File fileEntry: actual_file.listFiles()) {
+		for (File fileEntry: actual_file.listFiles()) {
 			if (fileEntry.isFile())
 				message_to_return += "f: "+fileEntry.getName()+"\n";
 			if (fileEntry.isDirectory())
