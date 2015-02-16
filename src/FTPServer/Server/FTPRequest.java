@@ -119,8 +119,13 @@ public class FTPRequest extends Thread {
         System.out.println(request_head +   "    " +  request_msg);
 
 		switch(request_head) {
-		case "USER":
-			return this.processUser(request_msg);
+		case "LIST":
+            
+            try {
+                return this.processList();
+            } catch (IOException e) {
+                return new FTPMessage(500, "Error with the data socket.\n").toString();
+            }
 		case "PASS":
 			try {
 				return this.processPass(request_msg);
@@ -129,19 +134,24 @@ public class FTPRequest extends Thread {
 				e.printStackTrace();
 				return new FTPMessage(503, "Bad sequence of commands.\n").toString();
 			}
-		case "SYST":
-			return this.processSyst();
-		case "LIST":
-		    
-			try {
-                return this.processList();
+        case "PORT":
+            return this.processPort(request_msg);
+        case "QUIT":
+            try {
+                processQuit();
             } catch (IOException e) {
-                return new FTPMessage(500, "Error with the data socket.\n").toString();
+                return new FTPMessage(500, "Error while closing the connection.\n").toString();
             }
-		case "PORT":
-			return this.processPort(request_msg);
+            return "END";
+        case "SYST":
+			return this.processSyst();
+        case "TYPE":
+            return this.processType(request_msg);
+		case "USER":
+            return this.processUser(request_msg);
 		}
-		return new FTPMessage(500, "Syntax error, command unrecognized.\n").toString();
+        return new FTPMessage(502, "Syntax error, command unrecognized.\n").toString();
+	}
 	}
 
 	/**
