@@ -25,6 +25,7 @@ public class FTPRequest extends Thread {
 
 	private Socket socket_communication;
 	private Socket socket_data;
+	private DataOutputStream dos;
 	private RootFileCSV csv_database;
 	private User user;
 	private final static String repository_root_PATH = "./root_file_repository/";
@@ -69,12 +70,12 @@ public class FTPRequest extends Thread {
             /*
              * DataOutputStream
              */
-            DataOutputStream dos = new DataOutputStream(os);
+            this.dos = new DataOutputStream(os);
             
             /*
              * Message : OK!
              */
-            dos.writeBytes(new FTPMessage(220, "Service ready.\n").toString());
+            this.dos.writeBytes(new FTPMessage(220, "Service ready.\n").toString());
             
             /*
              * Process requests
@@ -94,9 +95,9 @@ public class FTPRequest extends Thread {
                  * 		-requests have length = 1 -> send only the cmd (SYST for example)
                  */
                 if (request.length > 1)
-                	dos.writeBytes(processRequest(request[0], request[1]));                
+                	this.dos.writeBytes(processRequest(request[0], request[1]));                
                 else
-                	dos.writeBytes(processRequest(request[0], ""));
+                	this.dos.writeBytes(processRequest(request[0], ""));
             }
             
             is.close();
@@ -235,7 +236,8 @@ public class FTPRequest extends Thread {
          */
 		OutputStream os = this.socket_data.getOutputStream();
 		DataOutputStream dos = new DataOutputStream(os);
-		dos.writeBytes(message_to_return +"\n");
+		this.sendMessageCom(125, "Ready to send data\r\n");
+		dos.writeBytes(message_to_return +"\r\n");
 		dos.flush();
 		socket_data.close();
 		return new FTPMessage(226,"List successfully send\n").toString();
@@ -263,6 +265,18 @@ public class FTPRequest extends Thread {
 				return true;
 		}
 		return false;
+	}
+	
+	/*
+	 * Method which allows to send a com' message
+	 */
+	public void sendMessageCom(int number, String message) {
+	    try {
+            this.dos.writeBytes(new FTPMessage(number, message).toString());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 	}
 	
 	/**
