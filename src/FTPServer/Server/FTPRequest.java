@@ -115,6 +115,8 @@ public class FTPRequest extends Thread {
 	 * Method which allows to make general treatments for the input request
 	 */
 	public String processRequest(String request_head, String request_msg) {
+        System.out.println(request_head +   "    " +  request_msg);
+
 		switch(request_head) {
 		case "USER":
 			return this.processUser(request_msg);
