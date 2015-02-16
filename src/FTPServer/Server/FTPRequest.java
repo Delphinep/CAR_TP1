@@ -261,9 +261,9 @@ public class FTPRequest extends Thread {
 	 * @throws IOException
 	 */
 	public void processQuit() throws IOException {
+	    this.finish = false;
 		this.socket_communication.close();
 		this.socket_data.close();
-		finish = false;
 	}
 
 	/**
