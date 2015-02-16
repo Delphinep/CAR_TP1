@@ -152,6 +152,9 @@ public class FTPRequest extends Thread {
 		}
         return new FTPMessage(502, "Syntax error, command unrecognized.\n").toString();
 	}
+	
+	public String processType(String message) {
+	    return new FTPMessage(200, "Type changement : OK\n").toString();
 	}
 
 	/**
