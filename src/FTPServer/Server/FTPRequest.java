@@ -174,7 +174,7 @@ public class FTPRequest extends Thread {
 	 */
 	public void processPort(String request) {
 		String[] split_request = request.split(",");
-		String ip = split_request[0]+split_request[1]+split_request[2]+split_request[3];
+		String ip = split_request[0]+"."+split_request[1]+"."+split_request[2]+"."+split_request[3];
 		int port = 256 * Integer.parseInt(split_request[4]) + Integer.parseInt(split_request[5]);
 		
 		/*
