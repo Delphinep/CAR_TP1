@@ -131,7 +131,12 @@ public class FTPRequest extends Thread {
 		case "SYST":
 			return this.processSyst();
 		case "LIST":
-			return this.processList();
+		    
+			try {
+                return this.processList();
+            } catch (IOException e) {
+                return new FTPMessage(500, "Error with the data socket.\n").toString();
+            }
 		case "PORT":
 			return this.processPort(request_msg);
 		}
@@ -210,8 +215,9 @@ public class FTPRequest extends Thread {
 	/**
 	 * Method which allows to process the LIST command
 	 * @return The list of files and directories into the current path
+	 * @throws IOException
 	 */
-	public String processList() {
+	public String processList() throws IOException {
 		File actual_file = new File(this.current_path);
 		String message_to_return = "List of files into "+this.current_path+" :\n";
 		/*
