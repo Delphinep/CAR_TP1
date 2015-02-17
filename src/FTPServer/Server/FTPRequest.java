@@ -26,19 +26,50 @@ import FTPServer.User.User;
  */
 public class FTPRequest extends Thread {
 
+	/**
+	 * Socket communication (communication with client)
+	 */
 	private Socket socket_communication;
+	
+	/**
+	 * Socket to send data (with client)
+	 */
 	private Socket socket_data;
+	
+	/**
+	 * Stream to write data for the client
+	 */
 	private DataOutputStream dos;
+	
+	/**
+	 * CSV file
+	 */
 	private RootFileCSV csv_database;
+	
+	/**
+	 * User of the FTP request
+	 */
 	private User user;
+	
+	/**
+	 * Path of the root repository (for users)
+	 */
 	private final static String repository_root_PATH = "./root_file_repository/";
+	
+	/**
+	 * Current path of the user, in the FTP server
+	 */
 	private String current_path;
+	
+	/**
+	 * Boolean to show if the session is over, or not
+	 */
 	private boolean finish;
 	
 	/**
 	 * Constructor of the FTPRequest object
-	 * @param socket_communication
-	 * @param path
+	 * @param socket_communication The socket communication with the client
+	 * @param path The root file for users
 	 */
 	public FTPRequest(Socket socket_communication, RootFileCSV file) {
 		this.socket_communication = socket_communication;
@@ -86,12 +117,15 @@ public class FTPRequest extends Thread {
             while(!this.finish){
                 String[] request;
                 try{
+                	/*
+                	 * Split the request with " " -> to split the head and the message of the request
+                	 */
                     request = br.readLine().split(" ");
                 }
                 catch (SocketException e){
-                    //The socket was closed. No problem need to be raised.
-                    
-                    //End of the thread
+                    /*
+                     * The socket was closed. No problem need to be raised.
+                     */
                     break;
                 }
                 /*
@@ -128,9 +162,11 @@ public class FTPRequest extends Thread {
 	public void processRequest(String request_head, String request_msg) {
         System.out.println(request_head +   "    " +  request_msg);
 
+        /*
+         * Switch which contains all commands to process individually
+         */
 		switch(request_head) {
 		case "LIST":
-            
             try {
                 this.processList();
             } catch (IOException e) {
@@ -182,13 +218,16 @@ public class FTPRequest extends Thread {
         sendMessageCom(CodeMessage.CODE_502,"");
 	}
 	
-	public void processType(String message) {
+	/**
+	 * Method which allows to change the data representation type (ASCII or BINARY)
+	 */
+	public void processType() {
 	    sendMessageCom(CodeMessage.CODE_200, "Type changement : OK");
 	}
 
 	/**
 	 * Method which allows to process the USER command
-	 * @param message
+	 * @param username The username of the actual user, to log in
 	 */
 	public void processUser(String message) {
 	    user.setUsername(message);
@@ -197,8 +236,8 @@ public class FTPRequest extends Thread {
 
 	/**
 	 * Method which allows to process the PASS command
-	 * @param request
-	 * @throws Exception 
+	 * @param passwd The password of the actual user
+	 * @throws Exception Exception raises by the checkIdentity() method
 	 */
 	public void processPass(String passwd) throws Exception {
 		this.user.setPasswd(passwd);
@@ -210,7 +249,6 @@ public class FTPRequest extends Thread {
 	
 	/**
 	 * Method which allows to process the SYST command
-	 * @return A string with a small description of the Unix system
 	 */
 	public void processSyst() {
 		sendMessageCom(CodeMessage.CODE_215, "Unix system.");
@@ -218,7 +256,7 @@ public class FTPRequest extends Thread {
 	
 	/**
 	 * Method which allows to create a new stream for the data connection
-	 * @param request The IP and port of the data connection
+	 * @param request A string which contains the IP and port of the data connection
 	 */
 	public void processPort(String request) {
 		String[] split_request = request.split(",");
@@ -241,8 +279,8 @@ public class FTPRequest extends Thread {
 
 	/**
 	 * Method which allows to process the RETR command
-	 * @param request
-	 * @throws IOException 
+	 * @param file_name The file name of the file to retrieve
+	 * @throws IOException An exception raises if the file can't be found
 	 */
 	public void processRetr(String request) throws IOException {
 		
@@ -259,15 +297,24 @@ public class FTPRequest extends Thread {
 		OutputStream os = this.socket_data.getOutputStream();
 		DataOutputStream dos = new DataOutputStream(os);
 		
+		/*
+		 * Data transfer : OK
+		 */
 		sendMessageCom(CodeMessage.CODE_125, "");
 		
 		FileInputStream fis = new FileInputStream(file_to_send);
 		byte[] buffer_socket = new byte[this.socket_data.getReceiveBufferSize()];
 		int bytes_read = 0;
 		
+		/*
+		 * Send all bytes
+		 */
 		while ((bytes_read = fis.read(buffer_socket)) > 0)
 			dos.write(buffer_socket, 0, bytes_read);
 		
+		/*
+		 * Close all
+		 */
 		fis.close();
 		
 		dos.flush();
@@ -280,27 +327,36 @@ public class FTPRequest extends Thread {
 	
 	/**
 	 * Method which allows to process the STOR command
-	 * @param request
-	 * @throws IOException 
+	 * @param file_name The file name of the file to store
+	 * @throws IOException An exception raises if the file can't be found
 	 */
-	public void processStor(String request) throws IOException {
+	public void processStor(String file_name) throws IOException {
 		
-		File file_to_send = new File(this.current_path + request);
+		File file_to_send = new File(this.current_path + file_name);
 		
 		/*
          * Send the file to the user
          */
 		InputStream is = this.socket_data.getInputStream();
 		
+		/*
+		 * Data transfer : OK
+		 */
 		sendMessageCom(CodeMessage.CODE_125, "");
 		
 		FileOutputStream fos = new FileOutputStream(file_to_send);
 		byte[] buffer_socket = new byte[this.socket_data.getReceiveBufferSize()];
 		int bytes_read = 0;
 		
+		/*
+		 * Store all bytes
+		 */
 		while ((bytes_read = is.read(buffer_socket)) != -1)
 			fos.write(buffer_socket, 0, bytes_read);
-		
+
+		/*
+		 * Close all
+		 */
 		fos.flush();
 		
 		fos.close();
@@ -313,8 +369,7 @@ public class FTPRequest extends Thread {
 	
 	/**
 	 * Method which allows to process the LIST command
-	 * @return The list of files and directories into the current path
-	 * @throws IOException
+	 * @throws IOException Exception raises if the actual path file can't be found
 	 */
 	public void processList() throws IOException {
 		File actual_file = new File(this.current_path);
@@ -344,7 +399,7 @@ public class FTPRequest extends Thread {
 	
 	/**
 	 * Method which allows to quit the session
-	 * @throws IOException
+	 * @throws IOException Exception raises if socket_data or socket_communication can't be close
 	 */
 	public void processQuit() throws IOException {
 	    sendMessageCom(CodeMessage.CODE_221, "");
@@ -355,8 +410,8 @@ public class FTPRequest extends Thread {
 
 	/**
 	 * Method which allows to check the identity of the user
-	 * @return
-	 * @throws Exception 
+	 * @return A boolean - result of the identification of the user : True if the authentification is done, else False
+	 * @throws Exception Exception returned if the csv_database can't be used
 	 */
 	public boolean checkIdentity() throws Exception{
 		String username = this.user.getUsername();
