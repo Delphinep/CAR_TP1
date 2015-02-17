@@ -367,19 +367,23 @@ public class FTPRequest extends Thread {
 		return false;
 	}
 	
-	/*
+	/**
 	 * Method which allows to send a com' message
+	 * @param code The message code to send
+	 * @param message The message to send
 	 */
 	public void sendMessageCom(CodeMessage code, String message) {
-	    try {
+		try {
+			/*
+			 * If the message exists, we send to the client the message (code + message or only code)
+			 */
 	        if(message.length() < 1)
 	            this.dos.writeBytes(new FTPMessage(code).getMessage());
 	        else 
 	            this.dos.writeBytes(new FTPMessage(code, message).getMessage());
 	    } 
 	    catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+	    	e.printStackTrace();
         }
 	}
 	
