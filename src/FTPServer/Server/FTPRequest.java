@@ -6,6 +6,8 @@ package FTPServer.Server;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -153,6 +155,13 @@ public class FTPRequest extends Thread {
                 sendMessageCom(CodeMessage.CODE_500, "Error while closing the connection.");
             }
             return;
+        case "RETR":
+        	try {
+				this.processRetr(request_msg);
+			} catch (IOException e) {
+				sendMessageCom(CodeMessage.CODE_500, "Error with files.");
+	        }
+        	return;
         case "SYST":
 			this.processSyst();
 			return;
@@ -227,8 +236,38 @@ public class FTPRequest extends Thread {
 	 * Method which allows to process the RETR command
 	 * @param request
 	 */
-	public void processRetr(String request) {
-
+	public void processRetr(String request) throws IOException {
+		
+		File file_to_send = new File(this.current_path + request);
+		
+		if (!file_to_send.exists()) {
+			sendMessageCom(CodeMessage.CODE_550, "File not found.");			
+			return;
+		}
+		
+		/*
+         * Send the file to the user
+         */
+		OutputStream os = this.socket_data.getOutputStream();
+		DataOutputStream dos = new DataOutputStream(os);
+		
+		sendMessageCom(CodeMessage.CODE_125, "");
+		
+		FileInputStream fis = new FileInputStream(file_to_send);
+		byte[] buffer_socket = new byte[this.socket_data.getReceiveBufferSize()];
+		int bytes_read = 0;
+		
+		while ((bytes_read = fis.read(buffer_socket)) > 0)
+			dos.write(buffer_socket, 0, bytes_read);
+		
+		fis.close();
+		
+		dos.flush();
+		
+		sendMessageCom(CodeMessage.CODE_226, "");
+		
+		dos.close();
+		
 	}
 	
 	/**
