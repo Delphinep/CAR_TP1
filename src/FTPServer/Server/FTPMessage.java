@@ -20,9 +20,13 @@ public class FTPMessage {
 	 * @param ftp_number Number of the FTP message
 	 * @param ftp_message Message
 	 */
-	public FTPMessage(int ftp_number, String ftp_message) {
-		this.ftp_number = ftp_number;
-		this.ftp_message = ftp_message;
+	public FTPMessage(CodeMessage ftp_number) {
+		this.code = ftp_number;
+		this.info = "";
+	}
+	public FTPMessage(CodeMessage ftp_number, String details){
+	       this.code = ftp_number;
+	       this.info = "Details : " + details;
 	}
 	
 	/**
