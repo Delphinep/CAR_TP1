@@ -318,15 +318,15 @@ public class FTPRequest extends Thread {
 	 */
 	public void processList() throws IOException {
 		File actual_file = new File(this.current_path);
-		String message_to_return = "List of files into "+this.current_path+" :\n";
+		String message_to_return = "List of files into "+this.current_path+" :\r\n";
 		/*
 		 * For all files, if the studied file is a file -> f + getName; else d + getName
 		 */
 		for (File fileEntry: actual_file.listFiles()) {
 			if (fileEntry.isFile())
-				message_to_return += "f: "+fileEntry.getName()+"\n";
+				message_to_return += "f: "+fileEntry.getName()+"\r\n";
 			if (fileEntry.isDirectory())
-				message_to_return += "d: "+fileEntry.getName()+"\n";
+				message_to_return += "d: "+fileEntry.getName()+"\r\n";
 		}
 		
 		/*
@@ -336,7 +336,7 @@ public class FTPRequest extends Thread {
 		DataOutputStream dos = new DataOutputStream(os);
 		
 		sendMessageCom(CodeMessage.CODE_125, "");
-		dos.writeBytes(message_to_return +"\n");
+		dos.writeBytes(message_to_return);
 		dos.flush();
 		socket_data.close();
 		sendMessageCom(CodeMessage.CODE_226,"List successfully send");
