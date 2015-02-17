@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 import util.RootFileCSV;
 /*
@@ -81,8 +82,16 @@ public class FTPRequest extends Thread {
              * Process requests
              */
             while(!this.finish){
-                
-                String[] request = br.readLine().split(" ");
+                String[] request;
+                try{
+                    request = br.readLine().split(" ");
+                }
+                catch (SocketException e){
+                    //The socket was closed. No problem need to be raised.
+                    
+                    //End of the thread
+                    return;
+                }
                 /*
                  * request[0] -> COMMAND NAME
                  * request[1] -> MSG
