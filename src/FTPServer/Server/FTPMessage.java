@@ -4,16 +4,16 @@ package FTPServer.Server;
  * Class which permits to create an FTP message
  */
 public class FTPMessage {
-
-	/**
-	 * Number of the object message
-	 */
-	private int ftp_number;
+    
+    /**
+     * Ftp message code
+     */
+    private CodeMessage code;
 	
-	/**
-	 * Message of the object
-	 */
-	private String ftp_message;
+    /**
+     * Informations about the message the system want to add
+     */
+    private String info;
 	
 	/**
 	 * Constructor of the FTPMessage object
