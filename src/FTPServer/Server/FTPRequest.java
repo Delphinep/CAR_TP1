@@ -292,10 +292,14 @@ public class FTPRequest extends Thread {
 	/*
 	 * Method which allows to send a com' message
 	 */
-	public void sendMessageCom(int number, String message) {
+	public void sendMessageCom(CodeMessage code, String message) {
 	    try {
-            this.dos.writeBytes(new FTPMessage(number, message).toString());
-        } catch (IOException e) {
+	        if(message.length() < 1)
+	            this.dos.writeBytes(new FTPMessage(code).getMessage());
+	        else 
+	            this.dos.writeBytes(new FTPMessage(code, message).getMessage());
+	    } 
+	    catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
