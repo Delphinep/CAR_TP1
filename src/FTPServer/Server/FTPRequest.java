@@ -209,7 +209,7 @@ public class FTPRequest extends Thread {
 			this.processSyst();
 			return;
         case "TYPE":
-            this.processType(request_msg);
+            this.processType();
             return;
 		case "USER":
             this.processUser(request_msg);
@@ -229,8 +229,8 @@ public class FTPRequest extends Thread {
 	 * Method which allows to process the USER command
 	 * @param username The username of the actual user, to log in
 	 */
-	public void processUser(String message) {
-	    user.setUsername(message);
+	public void processUser(String username) {
+	    user.setUsername(username);
 	    sendMessageCom(CodeMessage.CODE_331,"");
 	}
 
@@ -282,9 +282,9 @@ public class FTPRequest extends Thread {
 	 * @param file_name The file name of the file to retrieve
 	 * @throws IOException An exception raises if the file can't be found
 	 */
-	public void processRetr(String request) throws IOException {
+	public void processRetr(String file_name) throws IOException {
 		
-		File file_to_send = new File(this.current_path + request);
+		File file_to_send = new File(this.current_path + file_name);
 		
 		if (!file_to_send.exists()) {
 			sendMessageCom(CodeMessage.CODE_550, "File not found.");			
