@@ -242,6 +242,7 @@ public class FTPRequest extends Thread {
 	/**
 	 * Method which allows to process the RETR command
 	 * @param request
+	 * @throws IOException 
 	 */
 	public void processRetr(String request) throws IOException {
 		
