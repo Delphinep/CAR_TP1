@@ -162,6 +162,13 @@ public class FTPRequest extends Thread {
 				sendMessageCom(CodeMessage.CODE_500, "Error with files.");
 	        }
         	return;
+        case "STOR":
+        	try {
+				this.processStor(request_msg);
+			} catch (IOException e) {
+				sendMessageCom(CodeMessage.CODE_500, "Error with files.");
+			}
+        	return;
         case "SYST":
 			this.processSyst();
 			return;
@@ -273,9 +280,34 @@ public class FTPRequest extends Thread {
 	/**
 	 * Method which allows to process the STOR command
 	 * @param request
+	 * @throws IOException 
 	 */
-	public void processStor(String request) {
-
+	public void processStor(String request) throws IOException {
+		
+		File file_to_send = new File(this.current_path + request);
+		
+		/*
+         * Send the file to the user
+         */
+		InputStream is = this.socket_data.getInputStream();
+		
+		sendMessageCom(CodeMessage.CODE_125, "");
+		
+		FileOutputStream fos = new FileOutputStream(file_to_send);
+		byte[] buffer_socket = new byte[this.socket_data.getReceiveBufferSize()];
+		int bytes_read = 0;
+		
+		while ((bytes_read = is.read(buffer_socket)) != -1)
+			fos.write(buffer_socket, 0, bytes_read);
+		
+		fos.flush();
+		
+		fos.close();
+		
+		sendMessageCom(CodeMessage.CODE_226, "");
+		
+		is.close();
+		
 	}
 	
 	/**
