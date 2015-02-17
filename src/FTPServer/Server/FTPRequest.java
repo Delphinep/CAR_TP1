@@ -76,7 +76,7 @@ public class FTPRequest extends Thread {
             /*
              * Message : OK!
              */
-            this.dos.writeBytes(new FTPMessage(220, "Service ready.\n").toString());
+            sendMessageCom(CodeMessage.CODE_220,"");
             
             /*
              * Process requests
@@ -104,9 +104,9 @@ public class FTPRequest extends Thread {
                  * 		-requests have length = 1 -> send only the cmd (SYST for example)
                  */
                 if (request.length > 1)
-                	this.dos.writeBytes(processRequest(request[0], request[1]));                
+                	processRequest(request[0], request[1]);                
                 else
-                	this.dos.writeBytes(processRequest(request[0], ""));
+                	processRequest(request[0], "");
             }
             
             is.close();
@@ -115,64 +115,68 @@ public class FTPRequest extends Thread {
             
 	    } catch (IOException e) {
             System.err.println("Problem encounter during the connection with the user");
-            e.printStackTrace();
             return;
-        }
+	    }
 	   
 	}
 
 	/**
 	 * Method which allows to make general treatments for the input request
 	 */
-	public String processRequest(String request_head, String request_msg) {
+	public void processRequest(String request_head, String request_msg) {
         System.out.println(request_head +   "    " +  request_msg);
 
 		switch(request_head) {
 		case "LIST":
             
             try {
-                return this.processList();
+                this.processList();
             } catch (IOException e) {
-                return new FTPMessage(500, "Error with the data socket.\n").toString();
+                sendMessageCom(CodeMessage.CODE_500, "Error with the data socket.");
             }
+            return;
 		case "PASS":
 			try {
-				return this.processPass(request_msg);
+				this.processPass(request_msg);
 			} 
 			catch (Exception e) {
-				e.printStackTrace();
-				return new FTPMessage(503, "Bad sequence of commands.\n").toString();
+				sendMessageCom(CodeMessage.CODE_503,"");
 			}
+			return;
         case "PORT":
-            return this.processPort(request_msg);
+            this.processPort(request_msg);
+            return;
         case "QUIT":
             try {
                 processQuit();
             } catch (IOException e) {
-                return new FTPMessage(500, "Error while closing the connection.\n").toString();
+                sendMessageCom(CodeMessage.CODE_500, "Error while closing the connection.");
             }
-            return "END";
+            return;
         case "SYST":
-			return this.processSyst();
+			this.processSyst();
+			return;
         case "TYPE":
-            return this.processType(request_msg);
+            this.processType(request_msg);
+            return;
 		case "USER":
-            return this.processUser(request_msg);
+            this.processUser(request_msg);
+            return;
 		}
-        return new FTPMessage(502, "Syntax error, command unrecognized.\n").toString();
+        sendMessageCom(CodeMessage.CODE_502,"");
 	}
 	
-	public String processType(String message) {
-	    return new FTPMessage(200, "Type changement : OK\n").toString();
+	public void processType(String message) {
+	    sendMessageCom(CodeMessage.CODE_200, "Type changement : OK");
 	}
 
 	/**
 	 * Method which allows to process the USER command
 	 * @param message
 	 */
-	public String processUser(String message) {
+	public void processUser(String message) {
 	    user.setUsername(message);
-	    return new FTPMessage(331, "User name okay, need password.\n").toString();
+	    sendMessageCom(CodeMessage.CODE_331,"");
 	}
 
 	/**
@@ -180,27 +184,27 @@ public class FTPRequest extends Thread {
 	 * @param request
 	 * @throws Exception 
 	 */
-	public String processPass(String passwd) throws Exception {
+	public void processPass(String passwd) throws Exception {
 		this.user.setPasswd(passwd);
 		if (this.checkIdentity())
-			return new FTPMessage(200, "Command okay.\n").toString();
+			sendMessageCom(CodeMessage.CODE_200,"");
 		else
-			return new FTPMessage(530, "Not logged in.\n").toString();
+			sendMessageCom(CodeMessage.CODE_530,"");
 	}
 	
 	/**
 	 * Method which allows to process the SYST command
 	 * @return A string with a small description of the Unix system
 	 */
-	public String processSyst() {
-		return new FTPMessage(215, "Unix system.\n").toString();
+	public void processSyst() {
+		sendMessageCom(CodeMessage.CODE_215, "Unix system.");
 	}
 	
 	/**
 	 * Method which allows to create a new stream for the data connection
 	 * @param request The IP and port of the data connection
 	 */
-	public String processPort(String request) {
+	public void processPort(String request) {
 		String[] split_request = request.split(",");
 		String ip = split_request[0]+"."+split_request[1]+"."+split_request[2]+"."+split_request[3];
 		int port = 256 * Integer.parseInt(split_request[4]) + Integer.parseInt(split_request[5]);
@@ -210,12 +214,12 @@ public class FTPRequest extends Thread {
 		 */
 		try {
 			this.socket_data = new Socket(ip, port);
-			return new FTPMessage(225, "Command Successful\n").toString();
+			sendMessageCom(CodeMessage.CODE_225,"");
+			return;
 		} catch (IOException e) {
-			System.out.println("No connection for data...");
-			e.printStackTrace();
+			sendMessageCom(CodeMessage.CODE_500,"No connection for data...");
 		}
-        return new FTPMessage(500, "Illegal port command.\n").toString();
+        sendMessageCom(CodeMessage.CODE_500, "Illegal port command.");
 		
 	}
 
@@ -240,7 +244,7 @@ public class FTPRequest extends Thread {
 	 * @return The list of files and directories into the current path
 	 * @throws IOException
 	 */
-	public String processList() throws IOException {
+	public void processList() throws IOException {
 		File actual_file = new File(this.current_path);
 		String message_to_return = "List of files into "+this.current_path+" :\n";
 		/*
@@ -258,11 +262,12 @@ public class FTPRequest extends Thread {
          */
 		OutputStream os = this.socket_data.getOutputStream();
 		DataOutputStream dos = new DataOutputStream(os);
-		this.sendMessageCom(125, "Ready to send data\r\n");
-		dos.writeBytes(message_to_return +"\r\n");
+		
+		sendMessageCom(CodeMessage.CODE_125, "");
+		dos.writeBytes(message_to_return +"\n");
 		dos.flush();
 		socket_data.close();
-		return new FTPMessage(226,"List successfully send\n").toString();
+		sendMessageCom(CodeMessage.CODE_226,"List successfully send");
 	}
 	
 	/**
