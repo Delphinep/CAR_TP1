@@ -33,7 +33,8 @@ public class FTPServer {
 				Socket socket_communication = socket.accept();
 				FTPRequest request = new FTPRequest(socket_communication, csv_database);
 				FTPServer.addFtpRequest(request);
-				request.run();
+				new Thread(request).start();
+				
 				
 			}
 			
