@@ -59,11 +59,10 @@ public class FTPMessage {
 	        return "503 : Bad sequence of commands. " + info  + "\n";
 	    case CODE_530 :
 	        return "530 : Not logged in. " + info + "\n";
+	    case CODE_550 :
+	    	return "550 : File unavailable. " + info + "\n";
 	    default :
 	        return "502 : command not implemented.\n";
-
-	        
 	    }
 	}
-	
 }
