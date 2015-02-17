@@ -90,7 +90,7 @@ public class FTPRequest extends Thread {
                     //The socket was closed. No problem need to be raised.
                     
                     //End of the thread
-                    return;
+                    break;
                 }
                 /*
                  * request[0] -> COMMAND NAME
@@ -275,9 +275,10 @@ public class FTPRequest extends Thread {
 	 * @throws IOException
 	 */
 	public void processQuit() throws IOException {
+	    sendMessageCom(CodeMessage.CODE_221, "");
 	    this.finish = false;
-		this.socket_communication.close();
-		this.socket_data.close();
+	    this.socket_data.close();
+		this.socket_communication.close();  
 	}
 
 	/**
